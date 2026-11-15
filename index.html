@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Werfklaar – Spreek je offerte in, de app doet de rest</title>
+<meta name="description" content="Werfklaar maakt van een ingesproken werfbezoek een offerte en een Peppol-factuur, met de Belgische btw-regels (6%, 21%, medecontractant) ingebouwd. Voor vakmensen in de bouw.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="./">werf<span>klaar</span></a>
+  <nav><a class="hide-m" href="#hoe">Hoe het werkt</a><a class="hide-m" href="gidsen.html">Gidsen</a><a href="#wachtlijst">Wachtlijst</a></nav>
+</div></header>
+
+<main>
+<div class="wrap hero">
+  <h1>Spreek je offerte in. Werfklaar doet de rest.</h1>
+  <p class="lead">Na het werfbezoek praat je 30 seconden in je gsm. Werfklaar maakt de offerte met jouw prijzen, past de juiste btw toe en stuurt de factuur via Peppol.</p>
+  <a class="btn" href="#wachtlijst">Zet me op de wachtlijst</a>
+  <p class="note">Voor aannemers en vakmensen in België. De eerste 100 op de wachtlijst krijgen 3 maanden gratis.</p>
+
+  <div class="demo" aria-label="Voorbeeld">
+    <div class="bubble">
+      <div class="who">Jij, in de bestelwagen</div>
+      <q>Badkamer bij Peeters in Lier, acht vierkante meter. Oude tegels eruit, nieuwe wandtegels tot aan het plafond, inloopdouche. Huis is van 1985.</q>
+    </div>
+    <div class="arrow" aria-hidden="true">&rarr;</div>
+    <div class="doc">
+      <strong>Offerte 2026-041 · Peeters, Lier</strong>
+      <table>
+        <tr><td>Uitbreken wandtegels (22 m²)</td><td>€ 594,00</td></tr>
+        <tr><td>Plaatsen wandtegels (22 m²)</td><td>€ 1.430,00</td></tr>
+        <tr><td>Inloopdouche, compleet</td><td>€ 1.850,00</td></tr>
+        <tr><td>Btw 6% (woning &gt; 10 jaar)</td><td>€ 232,44</td></tr>
+        <tr class="tot"><td>Totaal</td><td>€ 4.106,44</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="note">Voorbeeld met verzonnen prijzen. Werfklaar gebruikt altijd jouw eigen prijslijst, en jij keurt alles na voor het vertrekt.</p>
+</div>
+
+<section id="hoe"><div class="wrap">
+  <h2>Hoe het werkt</h2>
+  <ol class="steps">
+    <li><strong>Inspreken.</strong> Na het bezoek vertel je wat er moet gebeuren, zoals je het aan een collega zou zeggen.</li>
+    <li><strong>Nalezen.</strong> Werfklaar zet het om in posten, aantallen en prijzen uit jouw prijslijst. Jij past aan wat moet.</li>
+    <li><strong>Versturen.</strong> De klant krijgt de offerte per mail en tekent online.</li>
+    <li><strong>Factureren.</strong> Eén tik maakt er een factuur van. Naar bedrijven gaat die via Peppol, naar particulieren als pdf.</li>
+  </ol>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Gemaakt voor de Belgische bouw</h2>
+  <div class="grid3">
+    <div class="card"><h3>Juiste btw, automatisch</h3><p>6% voor renovatie van woningen ouder dan 10 jaar, 21% waar het moet, en de verplichte vermeldingen op de factuur.</p></div>
+    <div class="card"><h3>Medecontractant geregeld</h3><p>Werk je voor een btw-plichtige klant? Dan zet Werfklaar de btw verlegd met de volledige wettelijke tekst.</p></div>
+    <div class="card"><h3>Peppol ingebouwd</h3><p>E-facturatie is verplicht sinds 1 januari 2026. Bij Werfklaar zit het erin, zonder extra abonnement.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Prijs</h2>
+  <div class="price">€ 79 <small>per maand, excl. btw · maandelijks opzegbaar</small></div>
+  <p>Onbeperkt offertes en facturen. De eerste 100 mensen op de wachtlijst gebruiken het de eerste 3 maanden gratis.</p>
+</div></section>
+
+<section id="wachtlijst"><div class="wrap">
+  <h2>Zet je op de wachtlijst</h2>
+  <p>We starten in Vlaanderen. Je krijgt één mail als je kunt beginnen, en verder niets.</p>
+  <form class="wait" id="waitForm">
+    <div><label for="email">E-mailadres</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+    <div><label for="beroep">Wat doe je?</label>
+      <select id="beroep" name="beroep" required>
+        <option value="">Kies…</option>
+        <option>Algemene aannemer / renovatie</option>
+        <option>Tegelzetter</option>
+        <option>Sanitair / verwarming</option>
+        <option>Elektricien</option>
+        <option>Schilder</option>
+        <option>Dakwerker</option>
+        <option>Schrijnwerker</option>
+        <option>Tuinaannemer</option>
+        <option>Iets anders</option>
+      </select></div>
+    <div><label for="offertes">Hoeveel offertes maak je per maand?</label>
+      <select id="offertes" name="offertes" required>
+        <option value="">Kies…</option><option>1 tot 5</option><option>6 tot 15</option><option>16 tot 40</option><option>Meer dan 40</option>
+      </select></div>
+    <label class="check"><input type="checkbox" required> <span>Ik ga akkoord dat Werfklaar mijn gegevens bewaart om me te laten weten wanneer ik kan starten. Zie het <a href="privacy.html">privacybeleid</a>.</span></label>
+    <button class="btn" type="submit">Zet me op de wachtlijst</button>
+    <div class="ok" id="ok">Je staat op de lijst. We laten je weten wanneer je kunt beginnen.</div>
+  </form>
+</div></section>
+
+<section class="faq"><div class="wrap">
+  <h2>Vragen</h2>
+  <details><summary>Moet ik mijn huidige boekhoudprogramma laten vallen?</summary><p>Nee. Werfklaar doet offertes en verkoopfacturen. Je boekhouder kan die gewoon blijven ontvangen.</p></details>
+  <details><summary>Wat als de app een fout maakt?</summary><p>Niets vertrekt zonder dat jij het nagelezen en bevestigd hebt. Jij blijft verantwoordelijk voor wat je verstuurt, net zoals nu.</p></details>
+  <details><summary>Werkt het ook in het Frans?</summary><p>Eerst in het Nederlands. Een Franse versie volgt.</p></details>
+  <details><summary>Werkt het met mijn eigen prijzen?</summary><p>Ja. Je zet je prijslijst er één keer in, of je laat een paar oude offertes inlezen.</p></details>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  Werfklaar · <a href="gidsen.html">Gidsen voor vakmensen</a> · <a href="privacy.html">Privacy</a>
+</div></footer>
+
+<script>
+// Wachtlijst: verstuurt naar het Google Form "Werfklaar wachtlijst".
+const FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLScriIVSPLQX8kys0kjFzdmeAcaXcmuc82EOwCuZKncrfkmfSg/formResponse";
+const FIELDS = { email: "entry.556828116", beroep: "entry.1283858048", offertes: "entry.183107466" };
+document.getElementById('waitForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const f = e.target;
+  if (FORM_ENDPOINT) {
+    const body = new URLSearchParams();
+    for (const k of Object.keys(FIELDS)) body.append(FIELDS[k], f.elements[k].value);
+    try { await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body }); } catch (_) {}
+  }
+  f.querySelectorAll('input,select,button').forEach(el => el.disabled = true);
+  document.getElementById('ok').style.display = 'block';
+});
+</script>
+</body>
+</html>
