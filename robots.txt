@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jansegersmatteo-ops.github.io/werfklaar/sitemap.xml
