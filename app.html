@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="nl-BE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Werfklaar – Offerte en factuur inspreken (gratis)</title>
+<meta name="description" content="Gratis offerte- en factuurtool voor Belgische vakmensen: spreek je werk in, Werfklaar maakt de offerte met jouw prijzen, kiest de juiste btw (6%, 21% of verlegd) en zet de verplichte vermeldingen erop.">
+<link rel="stylesheet" href="style.css">
+<style>
+.app>section{border:0;padding:0}
+.row2>div,.row3>div{min-width:0}
+.app{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding:24px 0 60px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 0}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font-size:15px;cursor:pointer;color:var(--ink)}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.panel h2{font-size:20px;margin:0 0 12px}
+.panel h3{font-size:16px;margin:18px 0 8px}
+label.f{display:block;font-size:13px;font-weight:600;margin:10px 0 4px;color:var(--muted)}
+.panel input,.panel select,.panel textarea{width:100%;padding:10px 12px;border:1px solid #cfc7ba;border-radius:9px;font-size:16px;font-family:inherit;background:#fff}
+.panel textarea{min-height:110px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.b{border:0;border-radius:9px;padding:11px 16px;font-size:15px;font-weight:700;cursor:pointer;background:#ece6dc;color:var(--ink)}
+.b.p{background:var(--accent);color:#fff}
+.b.d{background:var(--ink);color:#fff}
+.b:disabled{opacity:.5;cursor:default}
+.mic{display:inline-flex;align-items:center;gap:8px}
+.mic.rec{background:#c62828;color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.75}}
+table.lines{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+table.lines th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:4px}
+table.lines td{padding:3px}
+table.lines input{padding:7px 8px;font-size:14px}
+table.lines td.x button{border:0;background:none;font-size:18px;cursor:pointer;color:#a33}
+tr.warn input{border-color:#e0a100;background:#fffaf0}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.vat{border-radius:10px;padding:12px;margin-top:12px;font-size:14px}
+.vat.v-ok{background:#e9f5ee;border:1px solid #bfe0cb}
+.vat.v-inf{background:#eef4fb;border:1px solid #c8daf0}
+.vat.v-w{background:#fff6e5;border:1px solid #f0d59a}
+.vat strong{font-size:16px}
+.list .it{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
+.list .it small{color:var(--muted)}
+/* Document */
+.paper{background:#fff;border:1px solid var(--line);border-radius:6px;padding:34px 36px;font-size:12.5px;line-height:1.45;color:#111;box-shadow:0 2px 14px rgba(0,0,0,.06)}
+.paper .hd{display:flex;justify-content:space-between;gap:20px;margin-bottom:22px}
+.paper .co{font-size:12px}
+.paper .co strong{font-size:16px;display:block;margin-bottom:2px}
+.paper .tt{text-align:right}
+.paper .tt h1{font-size:26px;letter-spacing:-.5px;margin:0 0 4px;color:#111}
+.paper .parties{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:18px}
+.paper .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#777;margin-bottom:3px}
+.paper table{width:100%;border-collapse:collapse;margin:8px 0}
+.paper th{text-align:left;border-bottom:1.5px solid #111;padding:6px 4px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.paper td{border-bottom:1px solid #e5e5e5;padding:6px 4px;vertical-align:top}
+.paper td.n,.paper th.n{text-align:right;white-space:nowrap}
+.paper .tot{margin-left:auto;width:55%}
+.paper .tot td{border:0;padding:3px 4px}
+.paper .tot tr.g td{border-top:1.5px solid #111;font-weight:700;font-size:14px;padding-top:6px}
+.paper .legal{margin-top:16px;font-size:10.5px;color:#333;border:1px solid #ddd;border-radius:4px;padding:8px 10px}
+.paper .pay{margin-top:14px;padding:10px;background:#f6f6f6;border-radius:4px}
+.paper .ogm{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:14px}
+.paper .foot{margin-top:18px;font-size:10px;color:#777;text-align:center}
+.paper .sign{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px}
+.paper .sign div{border-top:1px solid #999;padding-top:4px;font-size:11px;color:#555;height:60px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;display:none;z-index:9}
+@media (max-width:900px){.app{grid-template-columns:1fr}.row3{grid-template-columns:1fr 1fr}}
+@media print{
+  header.top,.tabs,.side,.noprint,footer,.toast{display:none!important}
+  body{background:#fff}
+  .app{display:block;padding:0}
+  .wrap{max-width:none;padding:0}
+  .paper{border:0;box-shadow:none;padding:0;font-size:11.5px}
+  @page{size:A4;margin:16mm}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="index.html">werf<span>klaar</span></a>
+  <nav><a class="hide-m" href="gidsen.html">Gidsen</a><a href="index.html">Over Werfklaar</a></nav>
+</div></header>
+
+<main class="wrap">
+  <div class="tabs noprint" id="tabs">
+    <button data-v="doc" class="on">Nieuwe offerte</button>
+    <button data-v="docs">Mijn documenten</button>
+    <button data-v="prices">Prijslijst</button>
+    <button data-v="me">Mijn gegevens</button>
+  </div>
+
+  <div class="app">
+    <section class="side">
+      <!-- NIEUW DOCUMENT -->
+      <div class="panel" data-view="doc">
+        <h2 id="docTitle">Nieuwe offerte</h2>
+        <div id="setupNote" class="vat v-w" style="display:none;margin-top:0;margin-bottom:12px">Vul eerst één keer <a href="#" data-go="me">je bedrijfsgegevens</a> in. Ze komen dan automatisch op elke offerte en factuur.</div>
+
+        <h3>1. Vertel wat er moet gebeuren</h3>
+        <textarea id="speech" placeholder="Bijvoorbeeld: badkamer van 8 vierkante meter, oude tegels eruit, 22 vierkante meter nieuwe wandtegels plaatsen, inloopdouche, nieuw toilet. Huis is van 1985."></textarea>
+        <div class="btns">
+          <button class="b d mic" id="micBtn" type="button">🎤 <span>Inspreken</span></button>
+          <button class="b p" id="parseBtn" type="button">Maak posten</button>
+        </div>
+        <div class="hint" id="micHint">Spreek gewoon zoals je het aan een collega vertelt. Werfklaar zoekt de posten in je prijslijst. Werkt het best in Chrome of Edge.</div>
+
+        <h3>2. Posten</h3>
+        <table class="lines"><thead><tr><th style="width:46%">Omschrijving</th><th>Aantal</th><th>Eenh.</th><th>Prijs/eenh. €</th><th></th></tr></thead><tbody id="lines"></tbody></table>
+        <div class="btns"><button class="b" id="addLine" type="button">+ Post toevoegen</button></div>
+
+        <h3>3. Klant en werf</h3>
+        <label class="f">Naam klant</label><input id="cName">
+        <label class="f">Adres klant</label><input id="cAddr" placeholder="Straat nr, postcode gemeente">
+        <label class="f">Adres van de werf (als het anders is)</label><input id="cSite">
+        <div class="row2">
+          <div><label class="f">Soort klant</label>
+            <select id="cType">
+              <option value="part">Particulier</option>
+              <option value="btw">Bedrijf/zelfstandige met periodieke btw-aangifte</option>
+              <option value="klein">Kleine onderneming (vrijgesteld) of vereniging zonder btw</option>
+            </select></div>
+          <div id="cVatWrap" style="display:none"><label class="f">Btw-nummer klant</label><input id="cVat" placeholder="BE0123.456.789"></div>
+        </div>
+
+        <h3>4. Btw bepalen</h3>
+        <div class="row3">
+          <div><label class="f">Woning in gebruik sinds (jaar)</label><input id="year" inputmode="numeric" placeholder="bv. 1985"></div>
+          <div><label class="f">Gebruik na de werken</label>
+            <select id="use"><option value="priv">(Hoofdzakelijk) privéwoning</option><option value="pro">Beroepsmatig / geen woning</option></select></div>
+          <div><label class="f">Soort werk</label>
+            <select id="work">
+              <option value="reno">Renovatie, herstelling, onderhoud</option>
+              <option value="new">Nieuwbouw</option>
+              <option value="hp">Warmtepomp leveren + plaatsen</option>
+              <option value="fossil">Nieuwe gas- of mazoutketel</option>
+            </select></div>
+        </div>
+        <div id="vatBox" class="vat v-inf"></div>
+
+        <h3>5. Document</h3>
+        <div class="row3">
+          <div><label class="f">Nummer</label><input id="dNum"></div>
+          <div><label class="f">Datum</label><input id="dDate" type="date"></div>
+          <div><label class="f" id="dueLbl">Geldig tot</label><input id="dDue" type="date"></div>
+        </div>
+        <label class="f">Opmerking op het document (optioneel)</label>
+        <input id="dNote" placeholder="bv. Start werken: week 12. Voorschot 30% bij aanvang.">
+        <div class="btns">
+          <button class="b p" id="saveBtn" type="button">Opslaan</button>
+          <button class="b d" id="printBtn" type="button">Pdf / afdrukken</button>
+          <button class="b" id="toInvoice" type="button">Maak er een factuur van</button>
+          <button class="b" id="newBtn" type="button">Nieuw</button>
+        </div>
+        <div class="hint" id="peppolHint"></div>
+      </div>
+
+      <!-- DOCUMENTEN -->
+      <div class="panel list" data-view="docs" hidden>
+        <h2>Mijn documenten</h2>
+        <div id="docList"></div>
+        <div class="hint">Alles wordt alleen op dit toestel bewaard, in je browser. Niets gaat naar een server.</div>
+        <div class="btns"><button class="b" id="exportBtn" type="button">Back-up downloaden</button><label class="b" style="display:inline-block">Back-up terugzetten<input type="file" id="importFile" accept="application/json" hidden></label></div>
+      </div>
+
+      <!-- PRIJSLIJST -->
+      <div class="panel" data-view="prices" hidden>
+        <h2>Prijslijst</h2>
+        <div class="hint" style="margin-top:0">Zet hier je eigen prijzen (zonder btw). Bij "Herken aan" zet je woorden waarmee je het werk benoemt, gescheiden door komma's. De voorbeeldprijzen zijn geen richtprijzen.</div>
+        <table class="lines"><thead><tr><th style="width:34%">Omschrijving</th><th>Eenh.</th><th>Prijs €</th><th style="width:34%">Herken aan</th><th></th></tr></thead><tbody id="priceRows"></tbody></table>
+        <div class="btns"><button class="b" id="addPrice" type="button">+ Prijs toevoegen</button><button class="b p" id="savePrices" type="button">Prijslijst opslaan</button></div>
+      </div>
+
+      <!-- GEGEVENS -->
+      <div class="panel" data-view="me" hidden>
+        <h2>Mijn gegevens</h2>
+        <label class="f">Bedrijfsnaam of je naam</label><input id="mName">
+        <label class="f">Adres</label><input id="mAddr" placeholder="Straat nr, postcode gemeente">
+        <div class="row2">
+          <div><label class="f">Ondernemingsnummer</label><input id="mKbo" placeholder="0123.456.789"></div>
+          <div><label class="f">Btw-regeling</label><select id="mVatReg"><option value="normal">Btw-plichtig (normale regeling)</option><option value="exempt">Vrijstellingsregeling kleine ondernemingen</option></select></div>
+        </div>
+        <div class="row2">
+          <div><label class="f">Rekeningnummer (IBAN)</label><input id="mIban" placeholder="BE00 0000 0000 0000"></div>
+          <div><label class="f">BIC (optioneel)</label><input id="mBic"></div>
+        </div>
+        <div class="row2">
+          <div><label class="f">Telefoon</label><input id="mTel"></div>
+          <div><label class="f">E-mail</label><input id="mMail" type="email"></div>
+        </div>
+        <label class="f">Rechtsvorm + RPR (alleen voor vennootschappen)</label><input id="mRpr" placeholder="bv. BV – RPR Gent, afdeling Dendermonde">
+        <div class="row2">
+          <div><label class="f">Betalingstermijn factuur (dagen)</label><input id="mTerm" inputmode="numeric" value="30"></div>
+          <div><label class="f">Geldigheid offerte (dagen)</label><input id="mValid" inputmode="numeric" value="30"></div>
+        </div>
+        <div class="btns"><button class="b p" id="saveMe" type="button">Opslaan</button></div>
+      </div>
+    </section>
+
+    <section>
+      <div id="paper" class="paper"></div>
+      <div class="hint noprint">Dit is hoe je klant het document ziet. Kijk het altijd na voor je het verstuurt. Werfklaar is een hulpmiddel en geen fiscaal advies.</div>
+    </section>
+  </div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const LS={get(k,d){try{const v=localStorage.getItem('wk_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('wk_'+k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur=n=>'€ '+(Math.round((+n||0)*100)/100).toLocaleString('nl-BE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const r2=n=>Math.round((+n||0)*100)/100;
+const today=()=>new Date().toISOString().slice(0,10);
+const addDays=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+(+n||0));return x.toISOString().slice(0,10)};
+const fmtDate=d=>{if(!d)return'';const [y,m,dd]=d.split('-');return dd+'/'+m+'/'+y};
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+
+/* ---------- Wettelijke vermeldingen ---------- */
+const TXT={
+  six:'Btw-tarief: Bij gebrek aan schriftelijke betwisting binnen een termijn van één maand vanaf de ontvangst van de factuur, wordt de klant geacht te erkennen dat (1) de werken worden verricht aan een woning waarvan de eerste ingebruikneming heeft plaatsgevonden in een kalenderjaar dat ten minste tien jaar voorafgaat aan de datum van de eerste factuur met betrekking tot die werken, (2) de woning, na uitvoering van die werken, uitsluitend of hoofdzakelijk als privéwoning wordt gebruikt en (3) de werken worden verstrekt en gefactureerd aan een eindverbruiker. Indien minstens één van die voorwaarden niet is voldaan, zal het normale btw-tarief van 21 pct. van toepassing zijn en is de klant ten aanzien van die voorwaarden aansprakelijk voor de betaling van de verschuldigde belasting, interesten en geldboeten.',
+  rc:'Verlegging van heffing. Bij gebrek aan schriftelijke betwisting binnen een termijn van één maand na de ontvangst van de factuur, wordt de afnemer geacht te erkennen dat hij een belastingplichtige is gehouden tot de indiening van periodieke aangiften. Als die voorwaarde niet vervuld is, is de afnemer ten aanzien van die voorwaarde aansprakelijk voor de betaling van de verschuldigde belasting, interesten en geldboeten.',
+  exempt:'Bijzondere vrijstellingsregeling kleine ondernemingen.'
+};
+
+/* ---------- Standaard prijslijst (voorbeelden) ---------- */
+const DEFAULT_PRICES=[
+ {d:'Uitbreken bestaande tegels, incl. afvoer',u:'m²',p:27,k:'uitbreken, tegels eruit, oude tegels, afbreken, slopen, uitkappen'},
+ {d:'Leveren en plaatsen wandtegels',u:'m²',p:65,k:'wandtegels, muurtegels, wanden betegelen, tegels plaatsen, tegels aan de muur'},
+ {d:'Leveren en plaatsen vloertegels',u:'m²',p:60,k:'vloertegels, vloer betegelen, nieuwe vloer'},
+ {d:'Inloopdouche, compleet geplaatst',u:'stuk',p:1850,k:'inloopdouche, douche, walk-in'},
+ {d:'Badmeubel met lavabo plaatsen',u:'stuk',p:450,k:'lavabo, wastafel, badmeubel, lavabomeubel'},
+ {d:'Hangtoilet leveren en plaatsen',u:'stuk',p:690,k:'toilet, wc, hangtoilet'},
+ {d:'Bad leveren en plaatsen',u:'stuk',p:950,k:'bad, ligbad, badkuip'},
+ {d:'Schilderwerk muren en plafond (2 lagen)',u:'m²',p:18,k:'schilderen, verven, schilderwerk'},
+ {d:'Stopcontact bijplaatsen',u:'stuk',p:85,k:'stopcontact, stopcontacten'},
+ {d:'Lichtpunt plaatsen',u:'stuk',p:95,k:'lichtpunt, lamp, verlichting, spot, spots'},
+ {d:'Container voor puin',u:'stuk',p:290,k:'container, puincontainer'},
+ {d:'Werk in regie',u:'uur',p:55,k:'uur, uren, regie, werkuren'}
+];
+
+/* ---------- State ---------- */
+let me=LS.get('me',{term:30,valid:30,vatReg:'normal'});
+let prices=LS.get('prices',null)||DEFAULT_PRICES.map(x=>({...x}));
+let docs=LS.get('docs',[]);
+let cur=null;
+
+function nextNum(type){
+  const y=new Date().getFullYear();
+  const key='ctr_'+type+'_'+y;let n=LS.get(key,0)+1;
+  const pre=type==='factuur'?'':'OF-';
+  return pre+y+'-'+String(n).padStart(3,'0');
+}
+function bumpNum(type,num){
+  const y=new Date().getFullYear();const key='ctr_'+type+'_'+y;
+  const m=String(num).match(/(\d+)\s*$/);if(m){const n=+m[1];if(n>LS.get(key,0))LS.set(key,n)}
+}
+function blankDoc(type){
+  type=type||'offerte';
+  const d=today();
+  return {id:'d'+Date.now(),type,num:nextNum(type),date:d,due:addDays(d,type==='factuur'?(me.term||30):(me.valid||30)),
+    lines:[],cName:'',cAddr:'',cSite:'',cType:'part',cVat:'',year:'',use:'priv',work:'reno',note:'',speech:'',ref:''};
+}
+
+/* ---------- Btw-beslissing ---------- */
+function vatDecision(doc){
+  const dYear=+(doc.date||today()).slice(0,4);
+  const yr=parseInt(doc.year,10);
+  if(me.vatReg==='exempt') return {rate:0,mode:'exempt',label:'Geen btw (vrijstellingsregeling)',why:'Je gebruikt de vrijstellingsregeling voor kleine ondernemingen: je rekent geen btw aan en zet de verplichte vermelding op het document.',text:TXT.exempt,cls:'ok'};
+  if(doc.cType==='btw') return {rate:0,mode:'rc',label:'Btw verlegd (medecontractant)',why:'Je klant dient periodieke btw-aangiftes in. Voor werk in onroerende staat reken je geen btw aan: de klant betaalt ze zelf. Het btw-nummer van de klant moet op de factuur.',text:TXT.rc,cls:'ok'};
+  if(doc.work==='fossil') return {rate:21,mode:'std',label:'21% btw',why:'Sinds 29 juli 2025 gaan de levering en plaatsing van een nieuwe gas- of mazoutketel aan 21%, ook in oudere woningen.',text:'',cls:'inf'};
+  if(doc.work==='new') return {rate:21,mode:'std',label:'21% btw',why:'Nieuwbouw valt in principe onder 21%. (Voor afbraak en heropbouw bestaat een aparte 6%-regeling met strenge voorwaarden. Vraag dat na bij je boekhouder.)',text:'',cls:'inf'};
+  if(doc.use!=='priv') return {rate:21,mode:'std',label:'21% btw',why:'Het verlaagde tarief geldt alleen als de woning na de werken (hoofdzakelijk) privé gebruikt wordt.',text:'',cls:'inf'};
+  if(doc.work==='hp'){
+    if(yr && dYear-yr>=10) return {rate:6,mode:'six',label:'6% btw',why:'Warmtepomp in een woning van minstens 10 jaar, privégebruik, gefactureerd aan de eindverbruiker.',text:TXT.six,cls:'ok'};
+    return {rate:6,mode:'hp',label:'6% btw (warmtepomp)',why:'Sinds 1 januari 2026 gaat een warmtepomp voor vijf jaar opnieuw aan 6%, ook in woningen jonger dan 10 jaar. Voor jongere woningen geldt een eigen vermelding: vraag je boekhouder welke tekst je moet gebruiken.',text:'',cls:'w'};
+  }
+  if(!yr) return {rate:21,mode:'std',label:'21% btw (bouwjaar onbekend)',why:'Vul het jaar in waarin de woning voor het eerst in gebruik genomen werd. Is ze minstens 10 kalenderjaren oud, dan kan 6%.',text:'',cls:'w'};
+  if(dYear-yr>=10) return {rate:6,mode:'six',label:'6% btw',why:'Renovatie van een privéwoning die in '+yr+' voor het eerst in gebruik genomen werd (minstens 10 kalenderjaren voor de factuur), gefactureerd aan de eindverbruiker. De wettelijke verklaring komt op het document.',text:TXT.six,cls:'ok'};
+  return {rate:21,mode:'std',label:'21% btw',why:'De woning is minder dan 10 kalenderjaren in gebruik ('+yr+'), dus het verlaagde tarief geldt niet.',text:'',cls:'inf'};
+}
+
+/* ---------- Gestructureerde mededeling ---------- */
+function ogm(seed){
+  let digits=String(seed).replace(/\D/g,'');
+  digits=(digits+String(Date.now()).slice(-10)).slice(0,10).padStart(10,'0');
+  let c=Number(BigInt(digits)%97n);if(c===0)c=97;
+  const s=digits+String(c).padStart(2,'0');
+  return '+++'+s.slice(0,3)+'/'+s.slice(3,7)+'/'+s.slice(7,12)+'+++';
+}
+
+/* ---------- Spraak naar posten ---------- */
+const NUMW={'een':1,'één':1,'eén':1,'twee':2,'drie':3,'vier':4,'vijf':5,'zes':6,'zeven':7,'acht':8,'negen':9,'tien':10,'elf':11,'twaalf':12,'dertien':13,'veertien':14,'vijftien':15,'zestien':16,'zeventien':17,'achttien':18,'negentien':19,'twintig':20,'dertig':30,'veertig':40,'vijftig':50,'zestig':60,'zeventig':70,'tachtig':80,'negentig':90,'honderd':100,'anderhalf':1.5,'anderhalve':1.5,'half':0.5,'halve':0.5};
+function wordNum(t){
+  // "tweeëntwintig", "vijfentwintig"
+  const m=t.match(/^(een|twee|drie|vier|vijf|zes|zeven|acht|negen)(?:ën|en)(twintig|dertig|veertig|vijftig|zestig|zeventig|tachtig|negentig)$/);
+  if(m)return NUMW[m[1]]+NUMW[m[2]];
+  return NUMW[t];
+}
+function norm(s){return s.toLowerCase().replace(/m2|m²/g,' m2 ').replace(/vierkante meter|vierkante meters|vierkant/g,' m2 ').replace(/lopende meter|strekkende meter/g,' lm ').replace(/[^\p{L}\p{N},.\s-]/gu,' ').replace(/\s+/g,' ').trim()}
+function findNumber(chunk){
+  const toks=chunk.split(' ');
+  for(let i=0;i<toks.length;i++){
+    let t=toks[i];
+    if(/^\d+([.,]\d+)?$/.test(t)){const v=parseFloat(t.replace(',','.'));if(v>=1900&&v<=2100)continue;return v}
+    const w=wordNum(t);if(w!==undefined){
+      if(w===100&&i>0){continue}
+      return w}
+  }
+  return null;
+}
+function parseSpeech(text){
+  const out={lines:[],year:null};
+  const ym=text.match(/(?:van|uit|in|bouwjaar|gebouwd(?: in)?|sinds)\s+(?:het jaar\s+)?(1[89]\d\d|20[0-2]\d)/i);
+  if(ym)out.year=+ym[1];
+  let lastArea=null;
+  const chunks=text.split(/[.;\n]|,(?!\d)|\s+en\s+(?=(?:een|nieuwe?|\d|oude|de|het)\b)/i).map(s=>norm(s)).filter(s=>s.length>1);
+  for(const ch of chunks){
+    if(/^(huis|woning|het huis|de woning)\b.*\b(1[89]\d\d|20[0-2]\d)\b/.test(ch) && !/tegel|douche|toilet|schilder/.test(ch))continue;
+    const num=findNumber(ch);
+    const isArea=/\bm2\b/.test(ch);
+    let best=null,bestScore=0;
+    prices.forEach((p,idx)=>{
+      let sc=0;
+      String(p.k||'').toLowerCase().split(',').map(s=>s.trim()).filter(Boolean).forEach(kw=>{
+        const re=new RegExp('(^|\\s)'+kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(en|s|e)?(?=\\s|$|[,.])','u');
+        if(re.test(ch))sc+=kw.split(' ').length*2});
+      if(sc>bestScore){bestScore=sc;best=idx}
+    });
+    if(best===null){
+      if(isArea&&num)lastArea=num;
+      if(ch.split(' ').length>=3 && !/^(badkamer|keuken|ruimte|kamer)\b/.test(ch)) out.lines.push({d:ch.charAt(0).toUpperCase()+ch.slice(1),q:num||1,u:'stuk',p:0,warn:true});
+      else if(isArea&&num){/* alleen oppervlakte genoemd */}
+      continue;
+    }
+    const p=prices[best];let q=num,warn=false;
+    if(p.u==='m²'){ if(q==null){q=lastArea;warn=true} else if(isArea) lastArea=q; }
+    if(q==null){q=1;warn=p.u!=='stuk'}
+    out.lines.push({d:p.d,q:q,u:p.u,p:p.p,warn});
+  }
+  return out;
+}
+
+/* ---------- UI: weergaves ---------- */
+document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();show(g.dataset.go)}});
+function show(v){
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelectorAll('[data-view]').forEach(p=>p.hidden=p.dataset.view!==v);
+  if(v==='docs')renderDocs();if(v==='prices')renderPrices();if(v==='me')fillMe();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- Document bewerken ---------- */
+const F=['cName','cAddr','cSite','cType','cVat','year','use','work','note'];
+function loadDoc(d){
+  cur=d;
+  $('docTitle').textContent=(d.type==='factuur'?'Factuur ':'Offerte ')+d.num;
+  $('speech').value=d.speech||'';
+  F.forEach(k=>{const el=$(k==='note'?'dNote':k);if(el)el.value=d[k]??''});
+  $('dNum').value=d.num;$('dDate').value=d.date;$('dDue').value=d.due;
+  $('dueLbl').textContent=d.type==='factuur'?'Te betalen tegen':'Geldig tot';
+  $('toInvoice').style.display=d.type==='factuur'?'none':'';
+  renderLines();sync();
+}
+function readForm(){
+  if(!cur)return;
+  F.forEach(k=>{const el=$(k==='note'?'dNote':k);if(el)cur[k]=el.value});
+  cur.num=$('dNum').value;cur.date=$('dDate').value;cur.due=$('dDue').value;cur.speech=$('speech').value;
+}
+function renderLines(){
+  const tb=$('lines');tb.innerHTML='';
+  cur.lines.forEach((l,i)=>{
+    const tr=document.createElement('tr');if(l.warn)tr.className='warn';
+    tr.innerHTML=`<td><input data-i="${i}" data-k="d" value="${esc(l.d)}"></td><td><input data-i="${i}" data-k="q" inputmode="decimal" value="${esc(l.q)}"></td><td><input data-i="${i}" data-k="u" value="${esc(l.u)}"></td><td><input data-i="${i}" data-k="p" inputmode="decimal" value="${esc(l.p)}"></td><td class="x"><button data-del="${i}" title="Verwijderen">×</button></td>`;
+    tb.appendChild(tr);
+  });
+  if(!cur.lines.length)tb.innerHTML='<tr><td colspan="5" class="hint">Nog geen posten. Spreek je werk in of voeg een post toe.</td></tr>';
+}
+$('lines').addEventListener('input',e=>{const t=e.target;if(t.dataset.i==null)return;const l=cur.lines[+t.dataset.i];let v=t.value;if(t.dataset.k==='q'||t.dataset.k==='p')v=parseFloat(String(v).replace(',','.'))||0;l[t.dataset.k]=v;l.warn=false;t.closest('tr').classList.remove('warn');sync()});
+$('lines').addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;cur.lines.splice(+b.dataset.del,1);renderLines();sync()});
+$('addLine').onclick=()=>{cur.lines.push({d:'',q:1,u:'stuk',p:0});renderLines();sync();const ins=$('lines').querySelectorAll('tr:last-child input');if(ins[0])ins[0].focus()};
+['speech','cName','cAddr','cSite','cType','cVat','year','use','work','dNote','dNum','dDate','dDue'].forEach(id=>{$(id).addEventListener('input',sync);$(id).addEventListener('change',sync)});
+$('parseBtn').onclick=()=>{
+  const t=$('speech').value.trim();if(!t){toast('Spreek of typ eerst wat er moet gebeuren.');return}
+  const r=parseSpeech(t);
+  if(r.year&&!$('year').value){$('year').value=r.year}
+  if(!r.lines.length){toast('Ik herkende geen posten. Voeg woorden toe bij "Herken aan" in je prijslijst.');}
+  cur.lines=cur.lines.concat(r.lines);renderLines();sync();
+  const w=r.lines.filter(l=>l.warn).length;
+  toast(r.lines.length+' posten toegevoegd'+(w?', '+w+' om na te kijken (oranje)':''));
+};
+
+function totals(doc){
+  const v=vatDecision(doc);
+  const net=r2(doc.lines.reduce((s,l)=>s+(+l.q||0)*(+l.p||0),0));
+  const vat=r2(net*v.rate/100);
+  return {v,net,vat,gross:r2(net+vat)};
+}
+function sync(){
+  readForm();
+  $('cVatWrap').style.display=cur.cType==='btw'?'':'none';
+  const t=totals(cur);
+  const box=$('vatBox');box.className='vat v-'+t.v.cls;
+  box.innerHTML=`<strong>${esc(t.v.label)}</strong><div>${esc(t.v.why)}</div>`;
+  $('setupNote').style.display=me.name?'none':'';
+  let ph='';
+  if(cur.type==='factuur'&&(cur.cType==='btw'||cur.cType==='klein'))ph='Let op: aan een Belgische onderneming met btw-nummer moet een factuur sinds 1 januari 2026 als e-factuur via Peppol vertrekken. Deze pdf volstaat daarvoor niet. Peppol-verzending komt in de betaalde versie van Werfklaar.';
+  $('peppolHint').textContent=ph;
+  renderPaper(t);
+}
+function renderPaper(t){
+  const d=cur,isInv=d.type==='factuur';
+  const lines=d.lines.filter(l=>l.d||l.p).map(l=>`<tr><td>${esc(l.d)}</td><td class="n">${esc(String(l.q).replace('.',','))} ${esc(l.u)}</td><td class="n">${eur(l.p)}</td><td class="n">${eur((+l.q||0)*(+l.p||0))}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">Nog geen posten</td></tr>';
+  const vatRow=t.v.mode==='rc'?`<tr><td>Btw</td><td class="n">verlegd</td></tr>`:t.v.mode==='exempt'?'':`<tr><td>Btw ${t.v.rate}%</td><td class="n">${eur(t.vat)}</td></tr>`;
+  const legal=t.v.text?`<div class="legal">${esc(t.v.text)}</div>`:'';
+  const pay=isInv?`<div class="pay">Gelieve <strong>${eur(t.gross)}</strong> te betalen tegen <strong>${fmtDate(d.due)}</strong> op rekening <strong>${esc(me.iban||'(IBAN invullen bij Mijn gegevens)')}</strong>${me.bic?' (BIC '+esc(me.bic)+')':''}, met mededeling <span class="ogm">${esc(d.ogm||'')}</span>.</div>`:'';
+  const sign=!isInv?`<div class="sign"><div>Voor akkoord – datum en handtekening klant</div><div>${esc(me.name||'')}</div></div>`:'';
+  const ref=isInv&&d.ref?`<div>Volgens offerte ${esc(d.ref)}</div>`:'';
+  $('paper').innerHTML=`
+  <div class="hd">
+    <div class="co"><strong>${esc(me.name||'Jouw bedrijfsnaam')}</strong>${esc(me.addr||'')}<br>
+      ${me.kbo?(me.vatReg==='exempt'?'Ondernemingsnr. ':'Btw ')+esc(me.vatReg==='exempt'?me.kbo:'BE '+me.kbo):''}${me.rpr?'<br>'+esc(me.rpr):''}
+      ${me.tel?'<br>'+esc(me.tel):''}${me.mail?' · '+esc(me.mail):''}</div>
+    <div class="tt"><h1>${isInv?'FACTUUR':'OFFERTE'}</h1>
+      <div>Nr. <strong>${esc(d.num)}</strong></div>
+      <div>Datum: ${fmtDate(d.date)}</div>
+      <div>${isInv?'Vervaldatum':'Geldig tot'}: ${fmtDate(d.due)}</div>${ref}</div>
+  </div>
+  <div class="parties">
+    <div><div class="lbl">Klant</div><strong>${esc(d.cName||'Naam klant')}</strong><br>${esc(d.cAddr||'')}${d.cVat?'<br>Btw '+esc(d.cVat):''}</div>
+    <div>${d.cSite?'<div class="lbl">Werfadres</div>'+esc(d.cSite):''}</div>
+  </div>
+  <table><thead><tr><th>Omschrijving</th><th class="n">Aantal</th><th class="n">Prijs/eenh.</th><th class="n">Totaal</th></tr></thead><tbody>${lines}</tbody></table>
+  <table class="tot"><tbody>
+    <tr><td>Totaal zonder btw</td><td class="n">${eur(t.net)}</td></tr>
+    ${vatRow}
+    <tr class="g"><td>${isInv?'Te betalen':'Totaal'}${t.v.mode==='std'||t.v.mode==='six'||t.v.mode==='hp'?' (incl. btw)':''}</td><td class="n">${eur(t.gross)}</td></tr>
+  </tbody></table>
+  ${d.note?'<div style="margin-top:10px">'+esc(d.note)+'</div>':''}
+  ${legal}${pay}${sign}
+  <div class="foot">${esc(me.name||'')}${me.iban?' · '+esc(me.iban):''}${me.kbo?' · '+esc(me.kbo):''}</div>`;
+}
+
+/* ---------- Opslaan, factuur, print ---------- */
+function saveCur(silent){
+  readForm();
+  if(cur.type==='factuur'&&!cur.ogm)cur.ogm=ogm(cur.num);
+  const i=docs.findIndex(x=>x.id===cur.id);
+  if(i>=0)docs[i]=cur;else docs.unshift(cur);
+  LS.set('docs',docs);bumpNum(cur.type,cur.num);
+  if(!silent)toast((cur.type==='factuur'?'Factuur':'Offerte')+' opgeslagen');
+  sync();
+}
+$('saveBtn').onclick=()=>saveCur();
+$('printBtn').onclick=()=>{saveCur(true);setTimeout(()=>window.print(),50)};
+$('newBtn').onclick=()=>{loadDoc(blankDoc('offerte'));toast('Nieuwe offerte')};
+$('toInvoice').onclick=()=>{
+  saveCur(true);
+  const f=JSON.parse(JSON.stringify(cur));
+  f.id='d'+Date.now();f.type='factuur';f.ref=cur.num;f.num=nextNum('factuur');f.date=today();f.due=addDays(f.date,me.term||30);f.ogm=ogm(f.num);
+  loadDoc(f);saveCur(true);toast('Factuur '+f.num+' gemaakt');
+};
+
+/* ---------- Documentenlijst ---------- */
+function renderDocs(){
+  const el=$('docList');
+  if(!docs.length){el.innerHTML='<div class="empty">Nog geen documenten.</div>';return}
+  el.innerHTML=docs.map((d,i)=>{const t=totals(d);return `<div class="it"><div><strong>${d.type==='factuur'?'Factuur':'Offerte'} ${esc(d.num)}</strong> · ${esc(d.cName||'zonder naam')}<br><small>${fmtDate(d.date)} · ${eur(t.gross)}</small></div><div><button class="b" data-open="${i}">Openen</button> <button class="b" data-rm="${i}" title="Verwijderen">×</button></div></div>`}).join('');
+}
+$('docList').addEventListener('click',e=>{
+  const o=e.target.closest('[data-open]'),r=e.target.closest('[data-rm]');
+  if(o){loadDoc(JSON.parse(JSON.stringify(docs[+o.dataset.open])));show('doc')}
+  if(r&&confirm('Dit document verwijderen van dit toestel?')){docs.splice(+r.dataset.rm,1);LS.set('docs',docs);renderDocs()}
+});
+$('exportBtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify({me,prices,docs},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='werfklaar-backup-'+today()+'.json';a.click();
+};
+$('importFile').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;const rd=new FileReader();
+  rd.onload=()=>{try{const j=JSON.parse(rd.result);if(j.me)me=j.me;if(j.prices)prices=j.prices;if(j.docs)docs=j.docs;LS.set('me',me);LS.set('prices',prices);LS.set('docs',docs);renderDocs();sync();toast('Back-up teruggezet')}catch(_){toast('Dit bestand kan ik niet lezen.')}};
+  rd.readAsText(f);
+};
+
+/* ---------- Prijslijst ---------- */
+function renderPrices(){
+  $('priceRows').innerHTML=prices.map((p,i)=>`<tr><td><input data-pi="${i}" data-k="d" value="${esc(p.d)}"></td><td><input data-pi="${i}" data-k="u" value="${esc(p.u)}" style="width:70px"></td><td><input data-pi="${i}" data-k="p" inputmode="decimal" value="${esc(p.p)}" style="width:90px"></td><td><input data-pi="${i}" data-k="k" value="${esc(p.k)}"></td><td class="x"><button data-pdel="${i}">×</button></td></tr>`).join('');
+}
+$('priceRows').addEventListener('input',e=>{const t=e.target;if(t.dataset.pi==null)return;let v=t.value;if(t.dataset.k==='p')v=parseFloat(v.replace(',','.'))||0;prices[+t.dataset.pi][t.dataset.k]=v});
+$('priceRows').addEventListener('click',e=>{const b=e.target.closest('[data-pdel]');if(!b)return;prices.splice(+b.dataset.pdel,1);renderPrices()});
+$('addPrice').onclick=()=>{prices.push({d:'',u:'stuk',p:0,k:''});renderPrices()};
+$('savePrices').onclick=()=>{LS.set('prices',prices);toast('Prijslijst opgeslagen')};
+
+/* ---------- Mijn gegevens ---------- */
+const MF={mName:'name',mAddr:'addr',mKbo:'kbo',mVatReg:'vatReg',mIban:'iban',mBic:'bic',mTel:'tel',mMail:'mail',mRpr:'rpr',mTerm:'term',mValid:'valid'};
+function fillMe(){Object.entries(MF).forEach(([id,k])=>{$(id).value=me[k]??($(id).tagName==='SELECT'?$(id).value:'')})}
+$('saveMe').onclick=()=>{Object.entries(MF).forEach(([id,k])=>me[k]=$(id).value.trim());me.kbo=me.kbo.replace(/^BE\s*/i,'');LS.set('me',me);toast('Gegevens opgeslagen');sync();show('doc')};
+
+/* ---------- Spraakherkenning ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null,recOn=false,base='';
+if(!SR){$('micBtn').disabled=true;$('micHint').textContent='Inspreken werkt niet in deze browser. Gebruik Chrome of Edge, of typ (of dicteer met het microfoontje van je gsm-toetsenbord) in het vak hierboven.'}
+else{
+  rec=new SR();rec.lang='nl-BE';rec.continuous=true;rec.interimResults=true;
+  rec.onresult=e=>{let fin='',int='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript+'. ';else int+=r[0].transcript}
+    if(fin){base=(base+' '+fin).trim()} $('speech').value=(base+' '+int).trim()};
+  rec.onend=()=>{if(recOn){try{rec.start()}catch(_){}}};
+  rec.onerror=e=>{if(e.error==='not-allowed'){recOn=false;setMic();toast('Geef de browser toegang tot je microfoon.')}};
+}
+function setMic(){const b=$('micBtn');b.classList.toggle('rec',recOn);b.querySelector('span').textContent=recOn?'Stop':'Inspreken'}
+$('micBtn').onclick=()=>{
+  if(!rec)return;
+  if(recOn){recOn=false;rec.stop();setMic();sync();if($('speech').value.trim())$('parseBtn').click();return}
+  base=$('speech').value.trim();recOn=true;setMic();try{rec.start()}catch(_){}
+};
+
+/* ---------- Start ---------- */
+loadDoc(blankDoc('offerte'));
+
+})();
+</script>
+</body>
+</html>
